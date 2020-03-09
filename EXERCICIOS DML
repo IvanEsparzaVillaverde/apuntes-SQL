@@ -1,0 +1,79 @@
+CREATE SCHEMA Investigación;
+CREATE DOMAIN Tipo_codigo CHAR(5);
+CREATE DOMAIN Tipo_DNI CHAR(9);
+CREATE DOMAIN Nome_Válido CHAR(30);
+
+
+
+CREATE TABLE Sede(
+    Nome_Sede Nome_Válido PRIMARY KEY,
+    Campus    Nome_Válido NOT NULL,
+    CONSTRAINT PK_Sede
+      PRIMARY KEY(Nome_Sede)
+);
+CREATE TABLE Departamento(
+    Nome_Departamento Nome_Válido  PRIMARY KEY,
+    Télefono          CHAR(9)      NOT NULL,
+    Director          Tipo_DNI,
+    -- FK (Director)
+);
+
+
+
+CREATE TABLE Ubicación(
+    Nome_Sede         Nome_Válido,
+    Nome_Departamento Nome_Válido,
+    PRIMARY KEY (Nome_Sede, Nome_Departamento),
+    CONSTRAINT FK_Sede_Ubicación
+        FOREIGN KEY (Nome_Sede)
+        REFERENCES Sede (Nome_Sede)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT FK_Departamento_Ubicación
+        FOREIGN KEY (Nome_Departamento)
+        REFERENCES Departamento (Nome_Departamento)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+
+);
+
+
+CREATE TABLE Grupo(
+    Nome_Grupo         Nome_Válido,
+    Nome_Departamento  Nome_Válido,
+    Área               Nome_Válido NOT NULL,
+    Líder              Tipo_DNI,
+    PRIMARY KEY (Nome_Grupo,Nome_Departamento)
+    FOREIGN KEY (Nome_Departamento) REFERENCES Departamento (Nome_Departamento)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    --FK(Líder)
+    
+
+);
+
+
+
+CREATE TABLE Profesor(
+    DNI             Tipo_DNI      PRIMARY KEY,
+    Nome_Profesor   Nome_Válido   NOT NULL,
+    Titulación      VARCHAR(20)   NOT NULL,
+    Experiencia     Integer,
+    N_Grupo         Nome_Válido,
+    N_Departamento  Nome_Välido
+    FOREIGN KEY     (N_Grupo, N_Departamento)
+      REFERENCES Grupo (Nome_Grupo, Nome_Departamento)
+      ON DELETE SET NULL
+      ON UPDATE CASCADE
+
+
+);
+
+ALTER TABLE Departamento
+    ADD CONSTRAINT FK_Profesor_Departamento
+        FOREIGN KEY (Director)
+        REFERENCES Profesor (DNI)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE;
+
