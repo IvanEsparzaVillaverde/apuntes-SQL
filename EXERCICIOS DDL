@@ -76,6 +76,16 @@ ALTER TABLE Departamento
         REFERENCES Profesor (DNI)
         ON DELETE SET NULL
         ON UPDATE CASCADE;
+       
+CREATE TABLE Participa(
+    DNI         Tipo_DNI,
+    Código_Proxecto  Tipo_Código,
+    Data_Inicio     DATE        NOT NULL,
+    Data_Cese       DATE,
+    Dedicación      INTEGER     NOT NULL,
+    PRIMARY KEY (DNI,Código_Proxecto),
+    CHECK(DATA_Inicio < Data_Cese)
+);
 
 -- A FOREING KEY de Profesor está mal. Facer unha nova.
 --   FOREING KEY con B:N M:R.
